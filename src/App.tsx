@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronDown, 
@@ -19,6 +20,8 @@ import {
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import PublicOffer from './pages/PublicOffer';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -66,7 +69,7 @@ const Navbar = () => {
 
       <div className="flex items-center gap-4">
         <button className="hidden sm:block bg-primary-dark/20 border border-primary-dark/30 text-primary px-6 py-2 rounded-full font-bold hover:bg-primary-dark/40 transition-all text-[10px] uppercase tracking-widest">
-          Записаться
+          Купить
         </button>
         <button 
           className="md:hidden text-text"
@@ -96,7 +99,7 @@ const Navbar = () => {
               </a>
             ))}
             <button className="w-full bg-primary-dark text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs">
-              Записаться
+              Купить
             </button>
           </motion.div>
         )}
@@ -140,7 +143,7 @@ const Hero = () => {
         transition={{ duration: 2, repeat: Infinity }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 text-primary/60"
       >
-        <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Explore</span>
+        <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Листайте</span>
         <ChevronDown size={20} />
       </motion.div>
     </section>
@@ -174,7 +177,7 @@ const About = () => {
           className="space-y-8"
         >
           <div>
-            <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] mb-4 block">The Visionary</span>
+            <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] mb-4 block">Эксперт</span>
             <h2 className="font-serif text-5xl md:text-7xl font-normal leading-tight">Лиана <span className="italic-accent">Гетман</span></h2>
           </div>
           <div className="space-y-6 text-text-muted text-lg font-light leading-relaxed">
@@ -217,7 +220,7 @@ const Audience = () => {
     <section className="py-32 px-6">
       <div className="max-w-6xl mx-auto space-y-20">
         <div className="text-center space-y-4">
-          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Opportunities</span>
+          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Возможности</span>
           <h2 className="font-serif text-4xl md:text-6xl font-normal">Для <span className="italic-accent">кого</span> обучение?</h2>
         </div>
         <div className="grid md:grid-cols-2 gap-8">
@@ -273,7 +276,7 @@ const Programs = () => {
       <div className="max-w-7xl mx-auto space-y-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="max-w-xl">
-            <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] block mb-4">Educational Programs</span>
+            <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] mb-4 block">Образовательные программы</span>
             <h2 className="font-serif text-5xl md:text-7xl font-normal leading-[1.1]">Выберите свой <span className="italic-accent">новый</span> уровень</h2>
           </div>
           <div className="text-text-muted text-[10px] uppercase tracking-[0.3em] font-bold border-l-2 border-primary pl-8 h-fit py-2">
@@ -303,7 +306,7 @@ const Programs = () => {
                 <div className="flex items-center justify-between pt-6 border-t border-white/5">
                   <div className="text-3xl font-serif italic text-primary">{course.price}</div>
                   <button className="bg-primary-dark text-white px-10 py-4 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-primary transition-all active:scale-95">
-                    Записаться
+                    Купить
                   </button>
                 </div>
               </div>
@@ -327,7 +330,7 @@ const Gallery = () => {
     <section className="py-32 px-6">
       <div className="max-w-7xl mx-auto space-y-20">
         <div className="text-center space-y-6">
-          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Editorial Gallery</span>
+          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Галерея работ</span>
           <h2 className="font-serif text-4xl md:text-6xl font-normal">Эстетика <span className="italic-accent">Ваших</span> работ</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -378,7 +381,7 @@ const Testimonials = () => {
     <section id="reviews" className="py-32 px-6 bg-surface">
       <div className="max-w-6xl mx-auto space-y-20">
         <div className="text-center">
-          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] block mb-4">Testimonials</span>
+          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px] block mb-4">Отзывы</span>
           <h2 className="font-serif text-4xl md:text-6xl font-normal">Истории <span className="italic-accent">успеха</span></h2>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
@@ -431,7 +434,7 @@ const FAQ = () => {
     <section id="faq" className="py-32 px-6">
       <div className="max-w-3xl mx-auto space-y-16">
         <div className="text-center space-y-4">
-          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Information</span>
+          <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Информация</span>
           <h2 className="font-serif text-4xl md:text-5xl font-normal">Частые <span className="italic-accent">вопросы</span></h2>
         </div>
         <div className="space-y-4">
@@ -473,29 +476,29 @@ const Footer = () => {
         <div className="space-y-6 text-center md:text-left">
           <div className="font-serif text-2xl uppercase tracking-[0.3em] text-text">LIANA GETMAN</div>
           <div className="flex justify-center md:justify-start gap-6">
-            <a href="#" className="text-text-muted hover:text-primary transition-colors"><Instagram size={20} /></a>
-            <a href="#" className="text-text-muted hover:text-primary transition-colors"><Send size={20} /></a>
-            <a href="#" className="text-text-muted hover:text-primary transition-colors"><Mail size={20} /></a>
+            <a href="#" className="text-text-muted hover:text-primary transition-colors text-[10px] font-bold uppercase tracking-widest">ВК</a>
+            <a href="https://t.me/lianagetmann" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-primary transition-colors text-[10px] font-bold uppercase tracking-widest">Телеграм</a>
+            <a href="https://www.instagram.com/liana.getman?igsh=b3M4OGZlZTNrbm95" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-primary transition-colors text-[10px] font-bold uppercase tracking-widest">Инстаграм</a>
           </div>
         </div>
         
         <div className="flex flex-wrap justify-center gap-x-12 gap-y-6">
-          <a href="#" className="text-text-muted hover:text-text transition-colors text-[10px] uppercase tracking-widest font-bold">Политика</a>
-          <a href="#" className="text-text-muted hover:text-text transition-colors text-[10px] uppercase tracking-widest font-bold">Оферта</a>
+          <Link to="/privacy" className="text-text-muted hover:text-text transition-colors text-[10px] uppercase tracking-widest font-bold">Политика</Link>
+          <Link to="/offer" className="text-text-muted hover:text-text transition-colors text-[10px] uppercase tracking-widest font-bold">Оферта</Link>
           <a href="#" className="text-text-muted hover:text-text transition-colors text-[10px] uppercase tracking-widest font-bold">Контакты</a>
         </div>
 
         <div className="text-text-muted/30 text-[10px] uppercase tracking-widest font-bold text-center md:text-right">
-          © 2024 LIANA GETMAN. Designed for Excellence.
+          © 2026 LIANA GETMAN. Designed for Excellence.
         </div>
       </div>
     </footer>
   );
 };
 
-export default function App() {
+const LandingPage = () => {
   return (
-    <div className="bg-bg text-text selection:bg-primary selection:text-white">
+    <>
       <Navbar />
       <Hero />
       <About />
@@ -505,6 +508,20 @@ export default function App() {
       <Testimonials />
       <FAQ />
       <Footer />
-    </div>
+    </>
+  );
+};
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="bg-bg text-text selection:bg-primary selection:text-white">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/offer" element={<PublicOffer />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
