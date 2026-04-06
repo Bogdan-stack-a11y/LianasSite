@@ -113,8 +113,13 @@ const Hero = () => {
     <section className="relative min-h-screen flex flex-col justify-center items-center px-6 pt-24 overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div 
-          className="w-full h-full bg-cover bg-center opacity-40 scale-105" 
-          style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida/ADBb0ugbpUj5ME-F4d3jMU-m1toEHVH_Jrg1nzficM1VyQjZAe9evkmekHm74NFYA0jgavUbEygZw7Nr2CW_4VU5saSVxnJeRF1DbQS1CMgRGgWW0QqnomhaRPZFDd9P-2JYdGyrqlv-h_EhvaPms9bh50ira-7hZt-Be92ZybIMmA1qsdJolbmw6HbkLRSkhyg0qp0yA8gfMMn5JC9-035hqidSdwZmb_0sPi_il-YIDe9aL33jvZPtnHg3azj7iGCvnCIOqMkvBKOjfg')" }}
+          className="w-full h-full bg-cover bg-center opacity-40 scale-105 transition-opacity duration-1000" 
+          style={{ backgroundImage: "url('/hero/hero-bg.jpg')" }}
+        />
+        {/* Fallback for Hero BG */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-cover bg-center opacity-40 scale-105 pointer-events-none -z-10"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=1920')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-bg/50" />
       </div>
@@ -164,7 +169,10 @@ const About = () => {
             <img 
               alt="Liana Getman" 
               className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida/ADBb0uiewwot9uanmXEGF1ZIA5R0oq1cvZxrCr1Zup7MIQnx_Xwf9L2v9nNbjUV-qhyuP6_Sq3vToYVp75zGSBHuvP2oRwmr6bk3TNNC04ykaXkRundzc3WDJAoawS1nqlvMy9OysAsAk0oBSCl6yr88oQ1sAiDpcLnlZbFsoyG1qYflHn48SOpdyYFya0_h127JsCa_buEvRV_Apl2uVLBBbWesLDnAB351WqdJDgZCw6JJ6Gmu7L0mXJmlkdc5xqmO-WWGVfqnvzK1WA"
+              src="/about/liana.jpg"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&q=80&w=800";
+              }}
             />
           </div>
           <div className="absolute -bottom-6 -left-6 w-32 h-32 border border-primary/20 rounded-2xl -z-10" />
@@ -260,14 +268,16 @@ const Programs = () => {
       level: "Базовый уровень",
       desc: "Интенсивный курс для быстрого старта. 4 дня плотной практики на моделях под моим контролем.",
       price: "35.000 ₽",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDIK_fz8kPfXNSQZ9EIGfjA1d7J_EeenpGhzrBvVbPR57JPtMmCQMg9y6EC2zXN3fkyiRaclr6wtpXkMQErOWpw4GU3c6ozrVIbno9IzliCBssU4g8WHaTvOAgVu8as36bxtqFjS9KvXkpln6Snz8KPG_8kqc3KwS1Xjf9Ohmb2rJU0O0yE8Eg1GTlvq4QbUvde2C-MHYCWGk_de4e6-xrJ6I_FPk_sqZm_DBXjD05ukRe7H7ogcK3Aa1DZJcRvqJP2xre4ibb-U6A"
+      img: "/programs/course1.jpg",
+      fallback: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800"
     },
     {
       title: "Pro: Совершенство",
       level: "Pro уровень",
       desc: "Повышение квалификации для профи. Сложные формы, безупречная архитектура и чистая эстетика.",
       price: "48.000 ₽",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBKnSwTywEA0CZn2DRGv-Dwi2HXCVfuZYsfL5Ro7eGJ993buBT1IGKIT_BdcvTQgl55pd4lGjYUQ-4CckeycBKn0DSECKfxgILiRST7gy3V5bdcA39L3dO36aGd9CLrw0CQeYLZFeUb_rSherghAcnyNc4TOgTNX_RaqZRViTBmXmSHC4KplhBmpXmIujey5hj_AjJ0JLKpJcUSRCT-HgrwB_73frGiMYiQ1NXCh6u6OZt6EEq7QJLVpXQ2ty1iosqrZA17jNTf1d8"
+      img: "/programs/course2.jpg",
+      fallback: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&q=80&w=800"
     }
   ];
 
@@ -294,7 +304,14 @@ const Programs = () => {
               className="group flex flex-col"
             >
               <div className="h-[400px] md:h-[450px] relative rounded-3xl overflow-hidden mb-8">
-                <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" src={course.img} alt={course.title} />
+                <img 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                  src={course.img} 
+                  alt={course.title} 
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = course.fallback;
+                  }}
+                />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
                 <div className="absolute bottom-8 left-8 bg-white/10 backdrop-blur-md text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/20">
                   {course.level}
@@ -320,10 +337,17 @@ const Programs = () => {
 
 const Gallery = () => {
   const images = [
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuD4UOzx54cpi5N9qQGdZLHUdX-AUftub16DTDnCK2eBoEZpNgBEQ48jVfr5l-KwZwjZF86boG3MdDQZld7hBeIEXCZH06qRk5jPO8kZvcoeVqNZlDzK65u_ou7K1sWuONGIlPOykGAbWOahUL-NGFOVby0gEThAJ24RxptP2lxVBlvMPnMjGfeXiqsYKJ9Wz4_zVvfD4nKpQud-feLwSQ8JWeQ7EiiJBVVLQ5Xp5foXqREOzN4qxXAJF-7ZBsU4-JmNG-28YGAg_u0",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuA6eiM3WfiCdKdA4HIKfE7B5S1hV991KRKKVtL8SQmUWVSpdviEX0Bp-VDhZP7jWQU8cq7zJg2K1MWMSf7QeK7fMlreKG73q9cfpGWSoMYMb-CaHrnYyHSf9a23O6hwal7tjHBLAP0qUlDhJPDBnmtwNcdWz6XkUto9LZofEotCsOLwLCcd_cbwHASRePlXz8mFS-2B6rrBuxXB1bq8gIkXSFyMolvHGEZDG91Gk8L9ppdwRqikhX3DHihkMaUS33h4SvnbtF5L81o",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCVyzgOAosC0taI1y83pMwqGLqhRz9xfv2i5ZeTYTtwcTeYP7zIi6vEMS7uBMTlQxO3UplgAE6d7j6PkryZS-SIx69WmV-clJe7tzzIqciv7tpcygjL4rpCsKTpNPXyB63dCNcXzjakPV-7KQSmRiz2KwSrSdAwSyoWG-lo8fh2LI3x_8oxXlaCoC1MN2vGP9odal9hg8vt75kTBhCbWr1SO9kc3b2NwyZ575NR1MndryXZ4yU4ZKvTATeFx20QSdoxzpA-Mut9m5Q",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuCY24ipw8E39yfT440ARzg-ABJp2tywuqfMy5FrHk-DW4_qbDTe2ccBxQi7sIxb80WUMSrmGsHxxPeomNkZOqETDtLFPg7M82wpOKMkCZAp17EVotlDQXJWFhGtNGKPZoF12CIDVExziwrEjoVLjCD6vIHoONkl6ayxZr2WqcAKy2RR5fhhNjWLCcawb6mhDuQ2R-Aik2O4sCVFyhzMO0pTmD3Ar-A7x3Zvw_V8JbMcwnqTZq8Q-QHWHGauvqS0qKsfxE2TY9Swoxo"
+    "/static-gallery/work1.jpg",
+    "/static-gallery/work2.jpg",
+    "/static-gallery/work3.jpg",
+    "/static-gallery/work4.jpg"
+  ];
+
+  const fallbacks = [
+    "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&q=80&w=800",
+    "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=800"
   ];
 
   return (
@@ -346,10 +370,65 @@ const Gallery = () => {
                 i % 2 !== 0 && "md:mt-20"
               )}
             >
-              <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" src={img} alt="Work aesthetic" />
+              <img 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                src={img} 
+                alt="Work aesthetic" 
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = fallbacks[i];
+                }}
+              />
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+};
+
+const ScrollingGallery = () => {
+  // These images should be placed in the /public/gallery/ folder
+  const images = [
+    "/gallery/work1.jpg",
+    "/gallery/work2.jpg",
+    "/gallery/work3.jpg",
+    "/gallery/work4.jpg",
+    "/gallery/work5.jpg",
+    "/gallery/work6.jpg",
+  ];
+
+  // Duplicate images for seamless loop
+  const duplicatedImages = [...images, ...images];
+
+  return (
+    <section className="py-20 overflow-hidden bg-surface/30">
+      <div className="flex whitespace-nowrap">
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            duration: 30,
+            ease: "linear",
+            repeat: Infinity,
+          }}
+          className="flex gap-6 px-3"
+        >
+          {duplicatedImages.map((img, i) => (
+            <div 
+              key={i} 
+              className="w-[300px] md:w-[450px] aspect-video rounded-2xl overflow-hidden flex-shrink-0 border border-white/5 shadow-2xl"
+            >
+              <img 
+                src={img} 
+                alt={`Work ${i}`} 
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${i}/800/450`;
+                }}
+              />
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
@@ -361,19 +440,22 @@ const Testimonials = () => {
       name: "Анна М.",
       role: "Мастер, Москва",
       text: "После курса База мой доход вырос в 2 раза уже через месяц. Лиана дала не только технику, но и веру в себя!",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDsX7D5F3YAFLhxVNLggI9CuzHh0zMm1ETLMNmfueUjtaGhqC8reQzzflLLFAKY6cPzG_KUoctVWWAM2fMZ2IsX0gmWsamrF6FNWeEIq548zoKN_-UbeAxqWJBVza5OBoR17y8ZUqVtTWy-ba88p5-RYxqxDxcjp4_5xVnJBYvtYy-Ji6uZwXEfLGSvWcISdW3u3KqyZbXCkk5ssDKuMHg9wy9KLpSNF4RKVZLbcSfk2ZWT0u8RRP4U_sS6aUkde0RKQBMJhf92x64"
+      img: "/testimonials/student1.jpg",
+      fallback: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200"
     },
     {
       name: "Екатерина К.",
       role: "Топ-мастер",
       text: "Курс Pro — это другой уровень. Теперь я работаю только с премиум клиентами. Архитектура ногтей стала идеальной.",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCFFJT9QQvYkOMmozK_B6b4G21bslmyGSpdY9K5g2IJzXVJZaR1OIYk_yeIsyo8brqeWtax0la8KvVcN0uC86uD1-g5th_zielALKlZqfDeXdCTKR7qumaNaXj-SSm3R0fZQh3CEjgfzxnlexgX-AKE917OyNKie0kho9Ng7rNTo_5T99r89h6q7_hH5IzZzH8yJ_LXJn-0UM_408WWazSJkSNBHIhfPbqGQq3nHtbVxJCnXrH9ZtSuSmT6k1v39pSCDdM0HMOZT8Q"
+      img: "/testimonials/student2.jpg",
+      fallback: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200"
     },
     {
       name: "Мария С.",
       role: "Выпускница",
       text: "Лиана объясняет всё до мельчайших деталей. Жалею только, что не пришла к ней раньше.",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDYzZgTxEYoedIwBGoQJ-wSrTqvbcUBb1IT8jVMm1XZn_LMzq_pPI0nuo792OGd1vEr7fAXemVZzquDb6TYk-FcctMUBvi6oOBqLf48gusKH-By2Y7wCHXvehCgfWEkMqCY76DhcHc7wMvIhmIPA0XJCd6ExKXf4i2GdpZgljn8LFrsUqnOrvjrrdABMFR4vmdTQsvkmeQfnfy_p7pfs8FLct08-lN_8iHMMFZJy0lMJ60R4_ThNW2eefZK0LZ66bu7MWiCevB692w"
+      img: "/testimonials/student3.jpg",
+      fallback: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
     }
   ];
 
@@ -401,7 +483,14 @@ const Testimonials = () => {
               <p className="italic text-text-muted font-light text-lg leading-relaxed pt-4">"{review.text}"</p>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/20 ring-offset-4 ring-offset-surface-bright">
-                  <img className="w-full h-full object-cover" src={review.img} alt={review.name} />
+                  <img 
+                    className="w-full h-full object-cover" 
+                    src={review.img} 
+                    alt={review.name} 
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = review.fallback;
+                    }}
+                  />
                 </div>
                 <div>
                   <div className="font-bold text-[10px] uppercase tracking-widest text-text">{review.name}</div>
@@ -505,6 +594,7 @@ const LandingPage = () => {
       <Audience />
       <Programs />
       <Gallery />
+      <ScrollingGallery />
       <Testimonials />
       <FAQ />
       <Footer />

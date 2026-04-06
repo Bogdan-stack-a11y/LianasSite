@@ -1,0 +1,1 @@
+Static gallery images. Name them work1.jpg, work2.jpg, work3.jpg, work4.jpg.
