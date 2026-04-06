@@ -388,14 +388,7 @@ const Gallery = () => {
 
 const ScrollingGallery = () => {
   // These images should be placed in the /public/gallery/ folder
-  const images = [
-    "/gallery/work1.jpg",
-    "/gallery/work2.jpg",
-    "/gallery/work3.jpg",
-    "/gallery/work4.jpg",
-    "/gallery/work5.jpg",
-    "/gallery/work6.jpg",
-  ];
+  const images = Array.from({ length: 21 }, (_, i) => `/gallery/work${i + 1}.jpg`);
 
   // Duplicate images for seamless loop
   const duplicatedImages = [...images, ...images];
