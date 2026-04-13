@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronDown, 
@@ -22,6 +22,9 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import PublicOffer from './pages/PublicOffer';
+import Checkout from './pages/Checkout';
+import Success from './pages/Success';
+import Admin from './pages/Admin';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -217,7 +220,7 @@ const Audience = () => {
       list: ["Постановка руки", "Техника чистого маникюра", "Психология работы"]
     },
     {
-      title: "Действующим мастерам",
+      title: "Для мастеров",
       icon: <TrendingUp size={40} />,
       desc: "Повысьте чек, сократите время работы и научитесь сложным техникам моделирования, которые выделят вас на рынке.",
       list: ["Скоростные техники", "Архитектура ногтей", "Личный бренд"]
@@ -262,40 +265,27 @@ const Audience = () => {
 };
 
 const Programs = () => {
-  const courses = [
-    {
-      title: "Специалист по маникюру",
-      level: "Базовый уровень",
-      desc: "Фундаментальный курс для начинающих. Постановка руки, чистый комбинированный маникюр, идеальное покрытие гель-лаком под кутикулу.",
-      price: "25.000 ₽",
-      img: "/programs/course1.jpg",
-      fallback: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      title: "Маникюр + Педикюр + Наращивание",
-      level: "Полное погружение",
-      desc: "Комплексное обучение профессии с нуля. Освойте все востребованные услуги салона красоты и станьте универсальным мастером.",
-      price: "65.000 ₽",
-      img: "/programs/course2.jpg",
-      fallback: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      title: "Маникюр + Наращивание (Верхние формы)",
-      level: "Интенсив",
-      desc: "Скоростное салонное моделирование. Идеальная архитектура, работа с полигелем, тонкое и прочное наращивание без лишнего опила.",
-      price: "40.000 ₽",
-      img: "/programs/course3.jpg",
-      fallback: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      title: "Маникюр: Топ-мастер",
-      level: "Повышение квалификации",
-      desc: "Для действующих мастеров. Сложные случаи, исправление архитектуры, скоростные техники и секреты работы в премиум-сегменте.",
-      price: "55.000 ₽",
-      img: "/programs/course4.jpg",
-      fallback: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=800"
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [courses, setCourses] = useState<any[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch('/api/courses')
+      .then(res => res.json())
+      .then(data => setCourses(data))
+      .catch(err => console.error('Failed to load courses', err));
+  }, []);
+
+  useEffect(() => {
+    if (selectedCourse) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
     }
-  ];
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedCourse]);
 
   return (
     <section id="programs" className="py-32 px-6 bg-bg">
@@ -317,7 +307,8 @@ const Programs = () => {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="group flex flex-col"
+              className="group flex flex-col cursor-pointer"
+              onClick={() => setSelectedCourse(course)}
             >
               <div className="h-[400px] md:h-[450px] relative rounded-3xl overflow-hidden mb-8">
                 <img 
@@ -334,12 +325,19 @@ const Programs = () => {
                 </div>
               </div>
               <div className="space-y-6">
-                <h3 className="font-serif text-4xl font-normal">{course.title.split(':')[0]}: <span className="italic-accent">{course.title.split(':')[1]}</span></h3>
+                <h3 className="font-serif text-4xl font-normal">{course.title.includes(':') ? <>{course.title.split(':')[0]}: <span className="italic-accent">{course.title.split(':')[1]}</span></> : course.title}</h3>
                 <p className="text-text-muted font-light text-lg">{course.desc}</p>
                 <div className="flex items-center justify-between pt-6 border-t border-white/5">
                   <div className="text-3xl font-serif italic text-primary">{course.price}</div>
-                  <button className="bg-primary-dark text-white px-10 py-4 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-primary transition-all active:scale-95">
-                    Купить
+                  <button 
+                    className="bg-primary-dark text-white px-10 py-4 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-primary transition-all active:scale-95"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Handle buy action here if needed, or just open modal
+                      setSelectedCourse(course);
+                    }}
+                  >
+                    Подробнее
                   </button>
                 </div>
               </div>
@@ -347,24 +345,94 @@ const Programs = () => {
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedCourse && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-6"
+            onClick={() => setSelectedCourse(null)}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-surface border border-white/10 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setSelectedCourse(null)}
+                className="absolute top-6 right-6 z-10 bg-black/50 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-md transition-colors"
+              >
+                <X size={24} />
+              </button>
+              
+              <div className="h-64 md:h-80 w-full relative">
+                <img 
+                  src={selectedCourse.img} 
+                  alt={selectedCourse.title} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = selectedCourse.fallback;
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-surface to-transparent" />
+              </div>
+
+              <div className="p-8 md:p-12 -mt-20 relative z-10 space-y-8">
+                <div>
+                  <span className="bg-primary/20 text-primary px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 inline-block">
+                    {selectedCourse.level}
+                  </span>
+                  <h3 className="font-serif text-3xl md:text-5xl font-normal leading-tight">
+                    {selectedCourse.title}
+                  </h3>
+                </div>
+
+                <p className="text-text-muted text-lg font-light leading-relaxed">
+                  {selectedCourse.fullDescription}
+                </p>
+
+                <div className="space-y-6">
+                  <h4 className="font-serif text-2xl text-white">Что вы получите:</h4>
+                  <ul className="space-y-4">
+                    {selectedCourse.whatYouGet.map((item: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-4 text-text-muted font-light">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" /> 
+                        <span className="leading-relaxed">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="text-4xl font-serif italic text-primary">
+                    {selectedCourse.price}
+                  </div>
+                  <button 
+                    className="w-full md:w-auto bg-gradient-to-r from-primary to-primary-dark text-white px-12 py-5 rounded-full font-bold text-[10px] uppercase tracking-[0.2em] hover:scale-105 transition-all active:scale-95 shadow-[0_0_20px_rgba(153,15,15,0.3)]"
+                    onClick={() => {
+                      setSelectedCourse(null);
+                      navigate('/checkout', { state: { course: selectedCourse } });
+                    }}
+                  >
+                    Купить курс
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
 
 const Gallery = () => {
-  const images = [
-    "/static-gallery/work1.jpg",
-    "/static-gallery/work2.jpg",
-    "/static-gallery/work3.jpg",
-    "/static-gallery/work4.jpg"
-  ];
-
-  const fallbacks = [
-    "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=800"
-  ];
+  // Use the 21 images previously set up for the scrolling gallery
+  const images = Array.from({ length: 21 }, (_, i) => `/gallery/work${i + 1}.jpg`);
 
   return (
     <section className="py-32 px-6">
@@ -373,71 +441,30 @@ const Gallery = () => {
           <span className="text-primary font-bold tracking-[0.4em] uppercase text-[10px]">Галерея работ</span>
           <h2 className="font-serif text-4xl md:text-6xl font-normal">Эстетика <span className="italic-accent">Ваших</span> работ</h2>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {images.map((img, i) => (
             <motion.div 
               key={i}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: (i % 4) * 0.1 }}
               className={cn(
                 "aspect-[3/4] rounded-2xl overflow-hidden group",
-                i % 2 !== 0 && "md:mt-20"
+                i % 2 !== 0 && "md:mt-10 lg:mt-16"
               )}
             >
               <img 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
                 src={img} 
-                alt="Work aesthetic" 
+                alt={`Work aesthetic ${i + 1}`} 
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = fallbacks[i];
+                  (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${i + 100}/800/1000`;
                 }}
               />
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-};
-
-const ScrollingGallery = () => {
-  // These images should be placed in the /public/gallery/ folder
-  const images = Array.from({ length: 21 }, (_, i) => `/gallery/work${i + 1}.jpg`);
-
-  // Duplicate images for seamless loop
-  const duplicatedImages = [...images, ...images];
-
-  return (
-    <section className="py-20 overflow-hidden bg-surface/30">
-      <div className="flex whitespace-nowrap">
-        <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            duration: 30,
-            ease: "linear",
-            repeat: Infinity,
-          }}
-          className="flex gap-6 px-3"
-        >
-          {duplicatedImages.map((img, i) => (
-            <div 
-              key={i} 
-              className="w-[300px] md:w-[450px] aspect-video rounded-2xl overflow-hidden flex-shrink-0 border border-white/5 shadow-2xl"
-            >
-              <img 
-                src={img} 
-                alt={`Work ${i}`} 
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${i}/800/450`;
-                }}
-              />
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
@@ -603,7 +630,6 @@ const LandingPage = () => {
       <Audience />
       <Programs />
       <Gallery />
-      <ScrollingGallery />
       <Testimonials />
       <FAQ />
       <Footer />
@@ -619,6 +645,9 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/offer" element={<PublicOffer />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </div>
     </BrowserRouter>
