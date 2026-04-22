@@ -140,13 +140,7 @@ export default function Landing() {
             }}
             className="w-full pb-12"
           >
-            {[
-              "/images/gallery/work1.jpg",
-              "/images/gallery/work2.jpg",
-              "/images/gallery/work3.jpg",
-              "/images/gallery/work4.jpg",
-              "/images/gallery/work5.jpg",
-            ].map((url, i) => (
+            {Array.from({ length: 12 }).map((_, i) => `/images/gallery/work${i + 1}.jpg`).map((url, i) => (
               <SwiperSlide key={i}>
                 <div className="relative aspect-[3/4] rounded-none overflow-hidden group cursor-grab">
                   <img 
@@ -181,44 +175,61 @@ export default function Landing() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course) => (
+            {courses.map((course) => {
+              const courseFallbackImages = [
+                "https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                "https://images.unsplash.com/photo-1519014816548-bf5fe059e98b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                "https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+              ];
+
+              return (
               <motion.div 
                 key={course.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="group flex flex-col bg-white border border-gray-100 p-8 rounded-none shadow-none hover:shadow-none transition-all duration-300"
+                className="group flex flex-col bg-white border border-gray-100 rounded-none shadow-none hover:shadow-none transition-all duration-300"
               >
-                <div className="flex-grow">
-                  <h3 className="text-xl font-medium text-[#1a1a1a] mb-4 leading-snug group-hover:text-accent transition-colors">{course.title}</h3>
-                  <div className="h-px w-12 bg-gray-200 mb-6 group-hover:bg-accent transition-colors"></div>
-                  <p className="text-gray-500 font-light text-sm mb-8">
-                    {course.goal}
-                  </p>
+                <div className="w-full aspect-video overflow-hidden bg-gray-100">
+                  <img 
+                    src={`/images/programs/course${course.id}.jpg`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    alt={course.title}
+                    onError={(e) => { e.currentTarget.src = courseFallbackImages[(course.id - 1) % 3]; }}
+                  />
                 </div>
-                
-                <div className="mt-auto">
-                  <div className="text-3xl font-display text-[#1a1a1a] mb-6">
-                    {course.price.toLocaleString('ru-RU')} <span className="text-xl">₽</span>
+                <div className="flex-grow p-8 flex flex-col">
+                  <div className="flex-grow">
+                    <h3 className="text-xl font-medium text-[#1a1a1a] mb-4 leading-snug group-hover:text-accent transition-colors">{course.title}</h3>
+                    <div className="h-px w-12 bg-gray-200 mb-6 group-hover:bg-accent transition-colors"></div>
+                    <p className="text-gray-500 font-light text-sm mb-8">
+                      {course.goal}
+                    </p>
                   </div>
                   
-                  <div className="flex flex-col gap-3">
-                    <button 
-                      onClick={() => setSelectedCourse(course)}
-                      className="w-full bg-[#1a1a1a] text-white py-3.5 rounded-none text-sm font-medium hover:bg-accent transition-colors"
-                    >
-                      Приобрести курс
-                    </button>
-                    <button 
-                      onClick={() => setSelectedCourse(course)}
-                      className="w-full border border-gray-200 text-gray-500 py-4 text-xs font-bold tracking-widest uppercase hover:border-[#1a1a1a] hover:text-[#1a1a1a] transition-colors"
-                    >
-                      Программа курса
-                    </button>
+                  <div className="mt-auto">
+                    <div className="text-3xl font-display text-[#1a1a1a] mb-6">
+                      {course.price.toLocaleString('ru-RU')} <span className="text-xl">₽</span>
+                    </div>
+                    
+                    <div className="flex flex-col gap-3">
+                      <button 
+                        onClick={() => setSelectedCourse(course)}
+                        className="w-full bg-[#1a1a1a] text-white py-3.5 rounded-none text-sm font-medium hover:bg-accent transition-colors"
+                      >
+                        Приобрести курс
+                      </button>
+                      <button 
+                        onClick={() => setSelectedCourse(course)}
+                        className="w-full border border-gray-200 text-gray-500 py-4 text-xs font-bold tracking-widest uppercase hover:border-[#1a1a1a] hover:text-[#1a1a1a] transition-colors"
+                      >
+                        Программа курса
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>
-            ))}
+            )})}
           </div>
         </div>
       </section>

@@ -22,21 +22,6 @@ async function startServer() {
     }
   });
 
-  app.get("/api/orders", (req, res) => {
-    // In a real app we would protect this route
-    try {
-      const orders = db.prepare(`
-        SELECT o.*, c.title as course_title 
-        FROM orders o 
-        JOIN courses c ON o.course_id = c.id
-        ORDER BY o.created_at DESC
-      `).all();
-      res.json(orders);
-    } catch (e) {
-      res.status(500).json({ error: "Failed to load orders" });
-    }
-  });
-
   app.post("/api/pay", async (req, res) => {
     const { courseId, customerName, customerContact, paymentMethod } = req.body;
     
