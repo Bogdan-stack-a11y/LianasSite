@@ -1,5 +1,6 @@
 {
-  "name": "LianaSite",
-  "description": "Premium manicure courses and masterclasses by industry expert Liana Getman.",
-  "requestFramePermissions": []
+  "name": "Liana Getman Manicure Courses",
+  "description": "Premium landing page and booking system for manicure courses.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
 }
